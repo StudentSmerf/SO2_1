@@ -10,7 +10,7 @@ void philosopher(int id, std::mutex* forks, int num_philosophers) {
     int dinner_time = 0;
     while (dinner_time < 10) {
         std::lock(forks[id], forks[(id + 1) % num_philosophers]);
-        this_thread::sleep_for(chrono::milliseconds(1000)); 
+        this_thread::sleep_for(chrono::milliseconds(100)); 
         unique_lock<std::mutex> left_fork(forks[id], std::adopt_lock);  
         unique_lock<std::mutex> right_fork(forks[(id + 1) % num_philosophers], std::adopt_lock); 
         
@@ -20,6 +20,8 @@ void philosopher(int id, std::mutex* forks, int num_philosophers) {
         cout << "Philosopher " << id << " finished eating." << endl;
         left_fork.unlock();
         right_fork.unlock();
+        cout << "Philosopher " << id << " is resting." << endl;
+        this_thread::sleep_for(chrono::milliseconds(3000));
         dinner_time++;
     }
 }
@@ -52,6 +54,6 @@ int main(int argc, char* argv[]) {
 
     delete[] forks;
     delete[] threads;
-    cout << "Finish" << endl;
+    cout << "Dinner time is over" << endl;
     return 0;
 }
