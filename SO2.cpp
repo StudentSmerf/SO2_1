@@ -6,11 +6,11 @@
 
 using namespace std;
 
-void philosopher(int id, mutex* forks, int num_philosophers) {
+void philosopher(int id, std::mutex* forks, int num_philosophers) {
     while (true) {
-        unique_lock<mutex> left_fork(forks[id]);  
+        unique_lock<std::mutex> left_fork(forks[id]);  
         this_thread::sleep_for(chrono::milliseconds(10)); 
-        unique_lock<mutex> right_fork(forks[(id + 1) % num_philosophers]); 
+        unique_lock<std::mutex> right_fork(forks[(id + 1) % num_philosophers]); 
 
         cout << "Philosopher " << id << " is eating." << endl;
         this_thread::sleep_for(chrono::milliseconds(100)); 
@@ -21,15 +21,19 @@ void philosopher(int id, mutex* forks, int num_philosophers) {
 
 int main(int argc, char* argv[]) {
     
+    cout << "Dining Philosophers Problem" << endl;
 
     int num_philosophers = stoi(argv[1]);
+
+    //check if num_philosophers is set corectly
+    cout << "Number of philosophers: " << num_philosophers << endl;
 
     if (num_philosophers < 2) {  
         cerr << "Number of philosophers can't be less than 2!" << endl;
         return 1;
     }
 
-    mutex* forks = new mutex[num_philosophers];  
+    std::mutex* forks = new std::mutex[num_philosophers];  
 
     thread* threads = new thread[num_philosophers];  
 
